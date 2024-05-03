@@ -31,29 +31,20 @@ ARG DATA_SERVER
 ARG DATA_SERVER_ROOT
 ARG GAME_SERVER
 
-ENV DATA_SERVER=$DATA_SERVER
-ENV DATA_SERVER_ROOT=$DATA_SERVER_ROOT
-ENV GAME_SERVER=$GAME_SERVER
+# Create a new DeploymentConfig.json file with the new values
+RUN jq --arg DATA_SERVER "$DATA_SERVER" '.Backend = $DATA_SERVER' /unrarfolder/WebGL/StreamingAssets/DeploymentConfig.json > tmp.$$.json && mv tmp.$$.json /unrarfolder/WebGL/StreamingAssets/DeploymentConfig.json
+RUN jq --arg GAME_SERVER "$GAME_SERVER" '.Server = $GAME_SERVER' /unrarfolder/WebGL/StreamingAssets/DeploymentConfig.json > tmp.$$.json && mv tmp.$$.json /unrarfolder/WebGL/StreamingAssets/DeploymentConfig.json
 
-COPY DeploymentConfig.json /unrarfolder/WebGL/StreamingAssets/DeploymentConfig.json
+# Replace a string in /unrarfolder/WebGL/index.html
+RUN sed -i "s/dmcc-be.int2.lv-aws-x3.xyzapps.xyz/$DATA_SERVER_ROOT/g" /unrarfolder/WebGL/index.html
 
 # ====================== STAGE 2
 
 # nginx state for serving content
-FROM sitespeedio/node:ubuntu-18.04-nodejs10.15.3
- 
-ARG DEBIAN_FRONTEND=NONINTERACTIVE
-ARG DOCKER_VERSION=17.06.0-CE
+FROM nginx:alpine
 
 RUN apt-get update && \
 apt-get install -y unrar jq
-
-RUN apt-get update && \
-    apt-get install -y -q curl gnupg2
-RUN curl http://nginx.org/keys/nginx_signing.key | apt-key add -
-
-RUN apt-get update && \
-    apt-get install -y -q nginx
 
 # Copy static assets from builder stage
 WORKDIR /www
@@ -63,16 +54,7 @@ COPY --from=builder /unrarfolder/WebGL .
 WORKDIR /etc/nginx/conf.d
 COPY webgl.conf default.conf
 
-RUN npm install pm2 -g
-
-
 # Go back to static files window
 WORKDIR /www
 RUN ls -la
-
-EXPOSE 443 80
-
-COPY preprocess.sh ./preprocess.sh
-COPY pm2.json ./pm2.json
-COPY BOOT.SH ./BOOT.SH
-CMD ["./preprocess.sh"]
+    
