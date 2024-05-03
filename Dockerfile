@@ -40,7 +40,10 @@ COPY DeploymentConfig.json /unrarfolder/WebGL/StreamingAssets/DeploymentConfig.j
 # ====================== STAGE 2
 
 # nginx state for serving content
-FROM ubuntu:bionic AS runner
+FROM sitespeedio/node:ubuntu-18.04-nodejs10.15.3
+ 
+ARG DEBIAN_FRONTEND=NONINTERACTIVE
+ARG DOCKER_VERSION=17.06.0-CE
 
 RUN apt-get update && \
 apt-get install -y unrar jq
@@ -60,6 +63,9 @@ COPY --from=builder /unrarfolder/WebGL .
 WORKDIR /etc/nginx/conf.d
 COPY webgl.conf default.conf
 
+RUN npm install pm2 -g
+
+
 # Go back to static files window
 WORKDIR /www
 RUN ls -la
@@ -67,4 +73,6 @@ RUN ls -la
 EXPOSE 443 80
 
 COPY preprocess.sh ./preprocess.sh
+COPY pm2.json ./pm2.json
+COPY BOOT.SH ./BOOT.SH
 CMD ["./preprocess.sh"]

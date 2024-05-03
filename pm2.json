@@ -1,0 +1,11 @@
+{
+  "apps": [
+    {
+      "name": "unity",
+      "interpreter": "bash",
+      "script": "./BOOT.SH",
+      "exec_mode": "fork",
+      "instances": 1
+    }
+  ]
+}

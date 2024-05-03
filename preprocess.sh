@@ -13,4 +13,9 @@ sed -i "s/dmcc-be.int2.lv-aws-x3.xyzapps.xyz/$DATA_SERVER_ROOT/g" /www/index.htm
 
 echo "Running nginx"
 
-nginx -g 'daemon off;'
+echo "Running PM2 Command"
+
+# pm2-runtime pm2.json 
+
+# run pm2-runtime with the pm2.json file in daemon mode
+pm2-runtime start pm2.json
