@@ -43,9 +43,6 @@ RUN sed -i "s/dmcc-be.int2.lv-aws-x3.xyzapps.xyz/$DATA_SERVER_ROOT/g" /unrarfold
 # nginx state for serving content
 FROM nginx:alpine
 
-RUN apt-get update && \
-apt-get install -y unrar jq
-
 # Copy static assets from builder stage
 WORKDIR /www
 COPY --from=builder /unrarfolder/WebGL .
