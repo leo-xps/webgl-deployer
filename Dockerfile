@@ -12,43 +12,45 @@ apt-get install -y unrar jq
 
 # Set working directory
 WORKDIR /unrarfolder
-COPY version ./
+
+# Break Cache
 ADD https://www.google.com /time.now
-ADD https://minio-api.int2.lv-aws-x3.xyzapps.xyz/landvault-deployments/virtualhq/mobile/WebGL.rar ./WebGL.rar
+
+# Download and Unpack build
+ARG BUILD_URL
+ADD $BUILD_URL ./WebGL.rar
 RUN chmod +x ./WebGL.rar
 RUN ls -la
 RUN unrar x WebGL.rar /unrarfolder/
+
 # delete all rar parts
 RUN rm WebGL.rar
-
-ARG DATA_SERVER
-ARG GAME_SERVER
-
-COPY DeploymentConfig.json /unrarfolder/WebGL/StreamingAssets/DeploymentConfig.json
 
 # echo DATA_SERVER in dockerfile
 ARG DATA_SERVER
 ARG DATA_SERVER_ROOT
 ARG GAME_SERVER
 
+ENV DATA_SERVER=$DATA_SERVER
+ENV DATA_SERVER_ROOT=$DATA_SERVER_ROOT
+ENV GAME_SERVER=$GAME_SERVER
+
 COPY DeploymentConfig.json /unrarfolder/WebGL/StreamingAssets/DeploymentConfig.json
-
-# echo DATA_SERVER in dockerfile
-RUN echo $DATA_SERVER
-RUN echo $DATA_SERVER_ROOT
-RUN echo $GAME_SERVER
-
-# Create a new DeploymentConfig.json file with the new values
-RUN jq --arg DATA_SERVER "$DATA_SERVER" '.Backend = $DATA_SERVER' /unrarfolder/WebGL/StreamingAssets/DeploymentConfig.json > tmp.$$.json && mv tmp.$$.json /unrarfolder/WebGL/StreamingAssets/DeploymentConfig.json
-RUN jq --arg GAME_SERVER "$GAME_SERVER" '.Server = $GAME_SERVER' /unrarfolder/WebGL/StreamingAssets/DeploymentConfig.json > tmp.$$.json && mv tmp.$$.json /unrarfolder/WebGL/StreamingAssets/DeploymentConfig.json
-
-# Replace a string in /unrarfolder/WebGL/index.html
-RUN sed -i "s/dmcc-be.int2.lv-aws-x3.xyzapps.xyz/$DATA_SERVER_ROOT/g" /unrarfolder/WebGL/index.html
 
 # ====================== STAGE 2
 
 # nginx state for serving content
-FROM nginx:alpine
+FROM ubuntu:bionic AS runner
+
+RUN apt-get update && \
+apt-get install -y unrar jq
+
+RUN apt-get update && \
+    apt-get install -y -q curl gnupg2
+RUN curl http://nginx.org/keys/nginx_signing.key | apt-key add -
+
+RUN apt-get update && \
+    apt-get install -y -q nginx
 
 # Copy static assets from builder stage
 WORKDIR /www
@@ -61,3 +63,8 @@ COPY webgl.conf default.conf
 # Go back to static files window
 WORKDIR /www
 RUN ls -la
+
+EXPOSE 443 80
+
+COPY preprocess.sh ./preprocess.sh
+CMD ["./preprocess.sh"]
