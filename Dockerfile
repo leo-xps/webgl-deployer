@@ -36,7 +36,7 @@ RUN jq --arg DATA_SERVER "$DATA_SERVER" '.Backend = $DATA_SERVER' /unrarfolder/W
 RUN jq --arg GAME_SERVER "$GAME_SERVER" '.Server = $GAME_SERVER' /unrarfolder/WebGL/StreamingAssets/DeploymentConfig.json > tmp.$$.json && mv tmp.$$.json /unrarfolder/WebGL/StreamingAssets/DeploymentConfig.json
 
 # Replace a string in /unrarfolder/WebGL/index.html
-RUN sed -i "s/dmcc-be.int2.lv-aws-x3.xyzapps.xyz/$DATA_SERVER_ROOT/g" /unrarfolder/WebGL/index.html
+RUN sed -i "s/virtualhq-be.int2.lv-aws-x3.xyzapps.xyz/$DATA_SERVER_ROOT/g" /unrarfolder/WebGL/index.html
 
 # ====================== STAGE 2
 
