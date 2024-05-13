@@ -17,7 +17,7 @@ WORKDIR /unrarfolder
 ADD https://www.google.com /time.now
 
 # Download and Unpack build
-ARG BUILD_URL
+ARG BUILD_URL="https://files-api.app.vhqdev01.com/landvault-deployments/vhq/client/WebGL.rar"
 ADD $BUILD_URL ./WebGL.rar
 RUN chmod +x ./WebGL.rar
 RUN ls -la
@@ -63,24 +63,24 @@ RUN jq --arg GAME_SERVER "$GAME_SERVER" '.Server = $GAME_SERVER' /unrarfolder/We
 RUN sed -i "s/$DATA_SERVER_ROOT_TOCHANGE/$DATA_SERVER_ROOT/g" /unrarfolder/WebGL/index.html
 
 # Replace meta tags in /unrarfolder/WebGL/index.html
-RUN sed -i "s/VARIABLE_TITLE/$VARIABLE_TITLE/g" /unrarfolder/WebGL/index.html
-RUN sed -i "s/VARIABLE_DESCRIPTION/$VARIABLE_DESCRIPTION/g" /unrarfolder/WebGL/index.html
-RUN sed -i "s/VARIABLE_KEYWORDS/$VARIABLE_KEYWORDS/g" /unrarfolder/WebGL/index.html
-RUN sed -i "s/VARIABLE_ROBOTS/$VARIABLE_ROBOTS/g" /unrarfolder/WebGL/index.html
-RUN sed -i "s/VARIABLE_LANGUAGE/$VARIABLE_LANGUAGE/g" /unrarfolder/WebGL/index.html
-RUN sed -i "s/VARIABLE_OGTYPE/$VARIABLE_OGTYPE/g" /unrarfolder/WebGL/index.html
-RUN sed -i "s/VARIABLE_OGLOCALE/$VARIABLE_OGLOCALE/g" /unrarfolder/WebGL/index.html
-RUN sed -i "s/VARIABLE_OGTITLE/$VARIABLE_OGTITLE/g" /unrarfolder/WebGL/index.html
-RUN sed -i "s/VARIABLE_OGURL/$VARIABLE_OGURL/g" /unrarfolder/WebGL/index.html
-RUN sed -i "s/VARIABLE_OGIMAGE/$VARIABLE_OGIMAGE/g" /unrarfolder/WebGL/index.html
-RUN sed -i "s/VARIABLE_OGSITENAME/$VARIABLE_OGSITENAME/g" /unrarfolder/WebGL/index.html
-RUN sed -i "s/VARIABLE_OGDESCRIPTION/$VARIABLE_OGDESCRIPTION/g" /unrarfolder/WebGL/index.html
-RUN sed -i "s/VARIABLE_TWITTERCARD/$VARIABLE_TWITTERCARD/g" /unrarfolder/WebGL/index.html
-RUN sed -i "s/VARIABLE_TWITTERURL/$VARIABLE_TWITTERURL/g" /unrarfolder/WebGL/index.html
-RUN sed -i "s/VARIABLE_TWITTERTITLE/$VARIABLE_TWITTERTITLE/g" /unrarfolder/WebGL/index.html
-RUN sed -i "s/VARIABLE_TWITTERDESCRIPTION/$VARIABLE_TWITTERDESCRIPTION/g" /unrarfolder/WebGL/index.html
-RUN sed -i "s/VARIABLE_TWITTERIMAGE/$VARIABLE_TWITTERIMAGE/g" /unrarfolder/WebGL/index.html
-RUN sed -i "s/VARIABLE_TWITTERSITE/$VARIABLE_TWITTERSITE/g" /unrarfolder/WebGL/index.html
+RUN sed -i "s@VARIABLE_TITLE@$VARIABLE_TITLE@g" /unrarfolder/WebGL/index.html
+RUN sed -i "s@VARIABLE_DESCRIPTION@$VARIABLE_DESCRIPTION@g" /unrarfolder/WebGL/index.html
+RUN sed -i "s@VARIABLE_KEYWORDS@$VARIABLE_KEYWORDS@g" /unrarfolder/WebGL/index.html
+RUN sed -i "s@VARIABLE_ROBOTS@$VARIABLE_ROBOTS@g" /unrarfolder/WebGL/index.html
+RUN sed -i "s@VARIABLE_LANGUAGE@$VARIABLE_LANGUAGE@g" /unrarfolder/WebGL/index.html
+RUN sed -i "s@VARIABLE_OGTYPE@$VARIABLE_OGTYPE@g" /unrarfolder/WebGL/index.html
+RUN sed -i "s@VARIABLE_OGLOCALE@$VARIABLE_OGLOCALE@g" /unrarfolder/WebGL/index.html
+RUN sed -i "s@VARIABLE_OGTITLE@$VARIABLE_OGTITLE@g" /unrarfolder/WebGL/index.html
+RUN sed -i "s@VARIABLE_OGURL@$VARIABLE_OGURL@g" /unrarfolder/WebGL/index.html
+RUN sed -i "s@VARIABLE_OGIMAGE@$VARIABLE_OGIMAGE@g" /unrarfolder/WebGL/index.html
+RUN sed -i "s@VARIABLE_OGSITENAME@$VARIABLE_OGSITENAME@g" /unrarfolder/WebGL/index.html
+RUN sed -i "s@VARIABLE_OGDESCRIPTION@$VARIABLE_OGDESCRIPTION@g" /unrarfolder/WebGL/index.html
+RUN sed -i "s@VARIABLE_TWITTERCARD@$VARIABLE_TWITTERCARD@g" /unrarfolder/WebGL/index.html
+RUN sed -i "s@VARIABLE_TWITTERURL@$VARIABLE_TWITTERURL@g" /unrarfolder/WebGL/index.html
+RUN sed -i "s@VARIABLE_TWITTERTITLE@$VARIABLE_TWITTERTITLE@g" /unrarfolder/WebGL/index.html
+RUN sed -i "s@VARIABLE_TWITTERDESCRIPTION@$VARIABLE_TWITTERDESCRIPTION@g" /unrarfolder/WebGL/index.html
+RUN sed -i "s@VARIABLE_TWITTERIMAGE@$VARIABLE_TWITTERIMAGE@g" /unrarfolder/WebGL/index.html
+RUN sed -i "s@VARIABLE_TWITTERSITE@$VARIABLE_TWITTERSITE@g" /unrarfolder/WebGL/index.html
 
 # ====================== STAGE 2
 
